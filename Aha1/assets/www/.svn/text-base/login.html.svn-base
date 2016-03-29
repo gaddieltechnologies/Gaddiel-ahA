@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>JalurYatra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Loading Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Loading Flat UI -->
+    <link href="css/flat-ui.css" rel="stylesheet">
+
+    <style>
+        #footer {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            height: 5px;  /* Height of the footer */            
+            text-align: right;
+            font-size: 12px;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+
+<body style="background-color:#1abc9c; overflow:hidden">
+    <div id="login" class="container">
+        <h5 align="center">Tracker</h5>
+
+        <div class="login-form" style="margin-top:20%;">
+            <h6 align="center">Login Id</h6>
+            <div class="form-group">
+                <input type="text" class="form-control login-field" value="" placeholder="Enter your login ID" id="login_name" />
+                <label class="login-field-icon fui-user" for="login-name"></label>
+            </div>
+
+            <a class="btn btn-primary btn-lg btn-block" onclick="Add()">Submit</a>
+        </div>
+
+    </div>
+
+    <div id="footer">Powered By Gaddiel Technologies Pvt Ltd &nbsp;&nbsp;&nbsp;</div>
+
+    <!-- /.container -->
+
+
+    <!-- jQuery (necessary for Flat UI's JavaScript plugins) <script src="js/toast.js"></script> -->
+    <script type="text/javascript" src="http://code.jQuery.com/jQuery-1.7.2.min.js"></script>
+    <script src="cordova-2.9.0.js"></script>
+    <script src="js/flat-ui.min.js"></script>
+    
+<script type="text/javascript" charset="utf-8">
+    // Wait for device API libraries to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // device APIs are available
+    //
+    function onDeviceReady() {
+        document.addEventListener("backbutton", onBackKeyDown, false);
+        var networkState = navigator.connection.type;
+
+        var states = {};
+        states[Connection.NONE] = 'No network connection';
+
+        if (states[networkState] == 'No network connection') {
+            alert('Connection type: ' + states[networkState]);
+            //Toast.longshow('Connection type: ' + states[networkState]);		
+        }
+
+    }
+
+    function onBackKeyDown() {
+        navigator.app.exitApp();
+    }
+
+    function Add() {
+
+        var id = document.getElementById("login_name").value;
+        var emp = JSON.stringify({
+            ID: id
+        });
+        empdb = [];
+        empdb.push(emp);
+        localStorage.setItem("empdb", JSON.stringify(empdb));
+        //alert("Id was saved.");
+        window.location = "home.html";
+    }
+</script>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8"/> 
+   <title></title> 
+
+</head> 
+<body> 
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+ <script src="cordova-2.9.0.js"></script>
+   <script src="js/jquery.min.js"></script>
+   <script type="text/javascript">
+   document.addEventListener("deviceready", onDeviceReady, false);
+   var mapviewId = window.location.search.substring(4);
+   var mapview;
+   var latitude;
+   var longitude;
+   var lat;
+   var lng;
+   function onDeviceReady() {
+	   document.addEventListener("backbutton", onBackKeyDown, false); 
+	   //mapviewfun();
+   }
+   var _directionsRenderer = '';
+   var _waypoints = new Array();
+   var setURl ="http://gaddieltech.fatcow.com/Aha2/get_TraceDetails.php";
+
+	$.ajax(
+	{
+		type: "POST",
+		url: setURl,//you can get this values from php using $_POST['n1'], $_POST['n2'] and $_POST['add']
+		data: {MasterId:mapviewId},
+		success: function(mapview)
+		{	
+			
+			lat=mapview[0].lat;
+			lng=mapview[0].lng;
+			if((lat=="0.000000")&&(lng=="0.000000")){
+				latitude=localStorage.getItem("latitude");	
+				longitude=localStorage.getItem("longitude");               
+			}else{
+				latitude=mapview[0].lat;
+				longitude=mapview[0].lng;
+			}
+			
+			 var mapOptions = {					 
+			           center: new google.maps.LatLng(latitude, longitude),
+			           zoom: 16,
+			           mapTypeId: google.maps.MapTypeId.ROADMAP
+			       };
+			       var path = new google.maps.MVCArray();
+			     
+			       var infoWindow = new google.maps.InfoWindow();
+			       var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+			       var poly = new google.maps.Polyline({ map: map, strokeColor: '#FF8200' });
+			       var lat_lng = new Array();
+			       for (i = 0; i < mapview.length; i++) {
+			           var data = mapview[i]
+			           	var lat=data.lat;
+						var lng=data.lng;
+						if((lat=="0.000000")&&(lng=="0.000000")){
+							var latitude=localStorage.getItem("latitude");	
+							var longitude=localStorage.getItem("longitude");               
+						}else{
+							latitude=data.lat;
+							longitude=data.lng;
+						}
+			           var myLatlng = new google.maps.LatLng(latitude, longitude);
+			           lat_lng.push(myLatlng);
+			           var marker = new google.maps.Marker({
+			               position: myLatlng,
+			               map: map,
+			               title: data.trace_time
+			           });
+			           (function (marker, data) {
+			               google.maps.event.addListener(marker, "click", function (e) {
+			                   infoWindow.setContent(data.trace_address);
+			                   infoWindow.open(map, marker);
+			               });
+			           })(marker, data);
+		}
+			       var polyline = new google.maps.Polyline({
+						path: lat_lng,
+						strokeColor: "#0BEF0F",
+						strokeOpacity: 0.6,
+						strokeWeight: 5
+						});
+				  polyline.setMap(map);
+		}
+	});  
+	
+	
+   function onBackKeyDown() {     
+   	window.history.back(); // Exit the Application 
+    }
+   </script>
+  
+   </div>
+   <div id="dvMap" style="width: 400px; height: 800px">
+</body> 
+</html>

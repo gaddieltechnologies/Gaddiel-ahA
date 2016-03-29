@@ -1,0 +1,63 @@
+8
+
+dir
+2
+https://gaddiel1/svn/JalurYatra/trunk/JalurYatra/assets/www/img
+https://gaddiel1/svn/JalurYatra
+
+
+
+2015-08-10T10:43:20.517001Z
+2
+peteradmin
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+2e6435e8-dfc9-8a4b-a395-a9a0d9d9dc55
+
+login
+dir
+
+icons
+dir
+
+tile
+dir
+
+splash.png
+file
+
+
+
+
+2015-08-10T11:48:39.415525Z
+f711f53f7464ff9d4b0ce9d3ce33501a
+2015-08-10T10:43:20.517001Z
+2
+peteradmin
+has-props
+
+favicon.ico
+file
+
+
+
+
+2015-08-10T11:48:39.425525Z
+4b295859f3800d8a925cf81d9f18f54c
+2015-08-10T10:43:20.517001Z
+2
+peteradmin
+has-props
+

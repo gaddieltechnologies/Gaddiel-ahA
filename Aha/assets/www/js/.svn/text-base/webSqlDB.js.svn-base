@@ -1,0 +1,157 @@
+ //-------------------------------------------Statement for Sqlite Database Process----------------------------//
+    //-------------------------------------------Start Process----------------------------//
+var db = openDatabase("AssetOperatorDB", "1.0", "Asset OperatorDB", 200000);  // Open SQLite Database 
+var createStatement = "CREATE TABLE IF NOT EXISTS TRACKDETAILS (ID INTEGER PRIMARY KEY AUTOINCREMENT, ROUTE TEXT, VEHICLE TEXT,  LATITUDE TEXT, LONGITUDE TEXT, DAT TEXT, TIME TEXT, REMARKS TEXT, FLAG TEXT)"; 
+var selectAllStatement = "SELECT * FROM TRACKDETAILS";	 
+var insertStatement = "INSERT INTO TRACKDETAILS (ROUTE, VEHICLE, LATITUDE, LONGITUDE, DAT, TIME, REMARKS, FLAG) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";	 
+var updateStatement = "UPDATE TRACKDETAILS SET ROUTE = ?, VEHICLE = ?, LATITUDE = ?, LONGITUDE = ?, DAT = ?, TIME = ?, REMARKS =?, FLAG = ? WHERE id=?";
+var deleteStatement = "DELETE FROM TRACKDETAILS";	 
+var dropStatement = "DROP TABLE TRACKDETAILS";	 
+
+var dataset;
+var Flags;
+
+	//--------------------------------End Process----------------------------//
+
+	var timeDelay = function(){
+		alert("step1: hit timeDelay function");
+		console.log("step1: hit timeDelay function");
+		navigator.geolocation.getCurrentPosition(onSuccess, onError);
+		
+	};
+	function initDatabase()  // Function Call When Page is ready.
+	{ 
+		try 
+		{	 
+			if (!window.openDatabase)  // Check browser is supported SQLite or not.	 
+			{	 
+				alert("Databases are not supported in this browser.");
+			}	 
+			else {	 
+				
+				createTable();  // If supported then call Function for create table in SQLite	 
+			} 
+		} 
+		catch (e)
+		{
+			if (e == 2) {	 
+				// Version number mismatch. 	 
+				//console.log("Invalid database version.");
+				alert("Invalid database version.");	 
+			} else {
+			
+				console.log("Unknown error " + e + ".");
+				alert("Unknown error " + e + ".");	 
+			}
+			return;
+		}
+	}
+	function createTable()  // Function for Create Table in SQLite.
+	{
+		db.transaction(function (tx) { tx.executeSql(createStatement, []); });
+	}
+	  
+    function  insertlocDb()
+	{
+		console.log("step2: hit insertlocDb function");
+		var d = new Date();
+		var yy = d.getFullYear();
+		var mm = d.getMonth() + 1;
+		var dd = d.getDate();
+		var hr = d.getHours();
+		var mi = d.getMinutes();
+		var se = d.getSeconds();
+		  
+		var tDate = yy+'-'+mm+'-'+dd; // Date 
+		var tTime = hr+':'+mi+':'+se; // Time 
+		
+		var route = document.getElementById('selRouteId').value;  
+    	var vehicle = document.getElementById('selVehicleId').value;
+    	var remarks = document.getElementById('txtRemarksId').value;
+    	alert(route +'\n'+ vehicle +'\n'+ tDate +'\n'+ tTime +'\n'+ remarks);
+    	var latitude = Latitude;
+		var longitude = Longitude;
+    	alert(latitude +'\n'+ longitude);
+    	console.log("step3: before insertStatement");
+        db.transaction(function (tx) { tx.executeSql(insertStatement, [route, vehicle, latitude, longitude, tDate ,tTime, remarks,'I']); alert("Successfully Data Saved"); });		
+		console.log("step4: after insertStatement");
+		
+		loadAndReset();
+		
+	}
+	function loadAndReset() //Function for Load and Reset...
+	{   
+		console.log("step5: hit loadAndReset function");
+		 var networkState = navigator.connection.type;
+
+	        var states = {};
+	        states[Connection.NONE] = 'No network connection';
+
+	        if (states[networkState] == 'No network connection') {
+	            alert('Connection type: ' + states[networkState]);
+	            //Toast.longshow('Connection type: ' + states[networkState]);		
+	        }
+	        else{
+	        	
+	           db.transaction(function (tx) 
+				{   
+				    console.log("step6: hit selectAllStatement function");
+					tx.executeSql(selectAllStatement, [], function (tx, result)
+					{
+						dataset = result.rows;
+						console.log("step7: berfore for loop");
+						for (var i = 0, item = null; i < dataset.length; i++) 
+						{
+			                console.log("step8: hit for loop");
+			               // alert("step8: hit for loop");					
+							item = dataset.item(i);
+						   
+							console.log("step9: after if statement");					    
+							var Route = item['ROUTE'];
+							var vehicle = item['VEHICLE'];
+							var Latitude = item['LATITUDE'];
+							var Longitude = item['LONGITUDE'];
+							var date = item['DAT'];
+							var time = item['TIME'];
+							var remarks = item['REMARKS'];
+							
+							alert(date+'-'+time+'-'+Latitude+'-'+Longitude+'-'+Route+'-'+vehicle);
+							var setURl ="http://lastmilecrm.gaddieltech.com/yatra/setRvd.php";
+							console.log("step10: before post process");
+							//alert("step10: before post process");
+							$.ajax(
+							{
+								type: "POST",
+								url: setURl,//you can get this values from php using $_POST['n1'], $_POST['n2'] and $_POST['add']
+								data: {route:Route,vehicle_num:vehicle,t_date:date,t_time:time,latitude:Latitude,longitude:Longitude,remarks:remarks}, 
+								success: function(data)
+								{
+								   console.log("step11: successfully process complete");								
+								   //alert("step11: successfully process complete");								
+									if(data==1)
+									{
+										DeleteRow();								
+									}
+									
+								}
+							});                      
+							
+						}
+			 
+					});
+			 
+				});
+	        }		   
+	}
+	function DeleteRow()
+	{
+		db.transaction(function (tx) { tx.executeSql(deleteStatement); 
+		console.log("Delete Successfully");
+		});	
+	}
+	function onError(tx, error) // Function for Handling Error...
+	{   
+	    console.log("step5: hit onError function");
+		alert(error.message);
+	}    
+	

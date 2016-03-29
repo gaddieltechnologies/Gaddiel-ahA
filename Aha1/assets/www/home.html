@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/flat-ui.css" rel="stylesheet">
+    
+	
+  </head>
+  <body>
+    <div class="container">
+      <h4 align="center">Sneaker</h4>
+      <div class="row">
+        <div class="col-sm-6 col-md-4">
+          <div class="todo">
+            <ul class="todo-name"  id="showList">
+            </ul>
+          </div><!-- /.todo -->
+        </div><!-- /.col-md-4 -->
+      </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+      <script src="cordova-2.9.0.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/flat-ui.min.js"></script>
+	<script src="js/application.js"></script>
+    <script type="text/javascript" src="js/logWebSql.js"></script>
+       <script src="js/toast.js"></script>  
+<script>
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+	checkActivateCode();
+window.setInterval(function(){
+	fetchMasterData();
+	}, 60000);
+document.addEventListener("backbutton", onBackKeyDown, false); 
+}
+
+
+function onBackKeyDown() { 
+	 confirm("Are You Sure ?");
+	navigator.app.exitApp(); // Exit the Application 
+ }	 </script>
+  </body>
+</html>
